@@ -1,5 +1,6 @@
 import tkinter as tk
 import data_processing
+import google_sheets_api
 
 def submit_data():
     data = data_processing.collect_data(
@@ -9,8 +10,8 @@ def submit_data():
         name_entry.get(),
         status_entry.get()
     )
-    data_processing.process_data(data)
-    google_sheets_api.append_data_to_sheet(data)
+    processed_data = data_processing.process_data(data)
+    google_sheets_api.append_data_to_sheet(processed_data)
     clear_fields()
 
 def clear_fields():
