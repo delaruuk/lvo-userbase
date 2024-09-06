@@ -1,18 +1,34 @@
 import tkinter as tk
+from tkinter import messagebox
 import data_processing
 import google_sheets_api
 
+
 def submit_data():
-    data = data_processing.collect_data(
-        builders_entry.get(),
-        community_entry.get(),
-        lot_entry.get(),
-        name_entry.get(),
-        status_entry.get()
-    )
-    processed_data = data_processing.process_data(data)
-    google_sheets_api.append_data_to_sheet(processed_data)
-    clear_fields()
+    try:
+        # Collect data from entry fields
+        data = data_processing.collect_data(
+            builders_entry.get(),
+            community_entry.get(),
+            lot_entry.get(),
+            name_entry.get(),
+            status_entry.get(),
+        )
+
+        # Process the collected data
+        processed_data = data_processing.process_data(data)
+
+        # Append the processed data to Google Sheets
+        google_sheets_api.append_data_to_sheet(processed_data)
+
+        # Clear the entry fields after submission
+        clear_fields()
+
+        # Provide feedback to the user
+        messagebox.showinfo("Success", "Data submitted successfully!")
+    except Exception as e:
+        messagebox.showerror("Error", f"An error occurred: {e}")
+
 
 def clear_fields():
     builders_entry.delete(0, tk.END)
@@ -21,9 +37,11 @@ def clear_fields():
     name_entry.delete(0, tk.END)
     status_entry.delete(0, tk.END)
 
+
+# Initialize the main window
 root = tk.Tk()
 root.title("Data Entry App")
-root.geometry("250x150")
+root.geometry("250x200")
 
 # Create labels and entries
 builders_label = tk.Label(root, text="Builders:")
@@ -61,4 +79,5 @@ status_entry.grid(row=4, column=1)
 submit_button = tk.Button(root, text="Submit", command=submit_data)
 submit_button.grid(row=5, columnspan=2, pady=10)
 
+# Run the main loop
 root.mainloop()
